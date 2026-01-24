@@ -33,6 +33,7 @@ Server default berjalan di `http://localhost:8080`.
 
 Model `Produk` memiliki field: `id`, `nama`, `harga`, `stok`
 Endpoint:
+
 - GET  /api/produk/        — daftar semua produk
 - GET  /api/produk/{id}    — ambil produk berdasarkan ID
 - POST /api/produk         — tambah produk baru
@@ -46,6 +47,7 @@ Endpoint:
 Model `Category` memiliki field: `id`, `nama`, `deskripsi`.
 
 Endpoint:
+
 - GET  /api/categories/        — daftar semua kategori
 - GET  /api/categories/{id}    — ambil kategori berdasarkan ID
 - POST /api/categories         — tambah kategori baru
@@ -53,7 +55,8 @@ Endpoint:
 - DELETE /api/categories/{id}  — hapus kategori
 
 ## Contoh curl
-### Produk
+
+### Curl Produk
 
 - List produk:
 
@@ -85,7 +88,7 @@ curl -X PUT -H "Content-Type: application/json" -d '{"nama":"Susu UHT","harga":5
 curl -X DELETE http://localhost:8080/api/produk/1
 ```
 
-### Category
+### Curl Category
 
 - List categories:
 
