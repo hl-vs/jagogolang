@@ -64,7 +64,7 @@ func addProduk(w http.ResponseWriter, r *http.Request) {
 	// cek nama produk sudah ada atau belum
 	for _, p := range produk {
 		if strings.EqualFold(p.Nama, newProduk.Nama) {
-			setJSONError(fmt.Sprintf("Produk dengan nama '%s' sudah ada.", newProduk.Nama), w)
+			setJSONError(fmt.Sprintf("Nama produk '%s' sudah ada.", newProduk.Nama), w)
 			return
 		}
 	}
@@ -98,15 +98,18 @@ func updateProduk(w http.ResponseWriter, r *http.Request) {
 			setJSONError("Produk ID tidak valid", w)
 			return
 		}
+
+		// validasi data
+		var updateProduk Produk
+		parseErr := json.NewDecoder(r.Body).Decode(&updateProduk)
+
+		if parseErr != nil {
+			setJSONError("Produk tidak valid", w)
+			return
+		}
+
 		for i := range produk {
 			if produk[i].ID == id {
-				var updateProduk Produk
-				parseErr := json.NewDecoder(r.Body).Decode(&updateProduk)
-
-				if parseErr != nil {
-					setJSONError("Produk tidak valid", w)
-				}
-
 				updateProduk.ID = id
 				produk[i] = updateProduk
 
@@ -140,7 +143,7 @@ func deleteProduk(w http.ResponseWriter, r *http.Request) {
 
 				printJSONSuccess(map[string]any{
 					"status":  "success",
-					"message": fmt.Sprintf("%s berhasil dihapus", p.Nama),
+					"message": fmt.Sprintf("Produk '%s' berhasil dihapus", p.Nama),
 				}, w)
 				return
 			}

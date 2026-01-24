@@ -2,17 +2,20 @@ package main
 
 var Route = struct {
 	API struct {
-		Product string
-		Health  string
+		Product  string
+		Category string
+		Health   string
 	}
 	ROOT string
 }{
 	API: struct {
-		Product string
-		Health  string
+		Product  string
+		Category string
+		Health   string
 	}{
-		Product: "/api/produk/",
-		Health:  "/health",
+		Product:  "/api/produk/",
+		Category: "/api/categories/",
+		Health:   "/health",
 	},
 	ROOT: "/",
 }

@@ -53,6 +53,24 @@ func main() {
 		}
 	})
 
+	http.HandleFunc(Route.API.Category, func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == "GET" {
+			listCategory(w, r)
+		}
+
+		if r.Method == "POST" {
+			addCategory(w, r)
+		}
+
+		if r.Method == "PUT" {
+			updateCategory(w, r)
+		}
+
+		if r.Method == "DELETE" {
+			deleteCategory(w, r)
+		}
+	})
+
 	http.HandleFunc(Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
 		printJSONSuccess(map[string]string{
 			"status":  "ok",
