@@ -78,6 +78,10 @@ func main() {
 		}, w)
 	})
 
+	http.HandleFunc(Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, "api-doc/JagoGolang/index.html")
+	})
+
 	http.HandleFunc(Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
 		printJSONSuccess(map[string]string{
 			"message": "Selamat Datang di Kasir Online - API v1.0",

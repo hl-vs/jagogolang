@@ -1,0 +1,4 @@
+name: prod
+variables:
+  - name: baseURL
+    value: https://vash.zeabur.app

@@ -5,6 +5,7 @@ var Route = struct {
 		Product  string
 		Category string
 		Health   string
+		APIDOC   string
 	}
 	ROOT string
 }{
@@ -12,10 +13,12 @@ var Route = struct {
 		Product  string
 		Category string
 		Health   string
+		APIDOC   string
 	}{
 		Product:  "/api/produk/",
 		Category: "/api/categories/",
 		Health:   "/health",
+		APIDOC:   "/api-doc",
 	},
 	ROOT: "/",
 }
