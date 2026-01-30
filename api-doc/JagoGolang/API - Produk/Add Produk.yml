@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{baseURL}}/api/produk/"
+  url: "{{baseURL}}/api/product"
   headers:
     - name: Content-Type
       value: application/json
@@ -14,9 +14,9 @@ http:
     data: |-
       {
         "id": 1,
-        "nama": "Indomie Rebus",
-        "harga": 2500,
-        "stok": 20
+        "name": "Indomie Goreng",
+        "price": 3500,
+        "stock": 14
       }
   auth: inherit
 

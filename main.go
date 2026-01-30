@@ -1,90 +1,73 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
+	"kasir-online/handlers"
+	"kasir-online/helper"
+	"kasir-online/repositories"
+	"kasir-online/services"
 	"log"
 	"net/http"
 )
 
-func setJSONError(v any, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusBadRequest)
-	if s, ok := v.(string); ok {
-		json.NewEncoder(w).Encode(map[string]string{
-			"status": "error",
-			"error":  s,
-		})
-		return
-	}
-	json.NewEncoder(w).Encode(v)
-}
-
-func setJSONNotFound(s string, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusNotFound)
-	json.NewEncoder(w).Encode(map[string]string{
-		"status": "error",
-		"error":  s,
-	})
-}
-
-func printJSONSuccess(v any, w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(v)
-}
-
 func main() {
-	http.HandleFunc(Route.API.Product, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "GET" {
-			listProduk(w, r)
-		}
+	productRepo := repositories.NewProductRepository(nil)
+	productService := services.NewProductService(productRepo)
+	productHandler := handlers.NewProductHandler(productService)
 
-		if r.Method == "POST" {
-			addProduk(w, r)
-		}
+	http.HandleFunc(helper.Route.API.ProductByID, productHandler.HandleByID)
+	http.HandleFunc(helper.Route.API.Product, productHandler.HandleProducts)
+	// http.HandleFunc(helper.Route.API.Product, func(w http.ResponseWriter, r *http.Request) {
+	// 	if r.Method == "GET" {
+	// 		models.listProduk(w, r)
+	// 	}
 
-		if r.Method == "PUT" {
-			updateProduk(w, r)
-		}
+	// 	if r.Method == "POST" {
+	// 		addProduk(w, r)
+	// 	}
 
-		if r.Method == "DELETE" {
-			deleteProduk(w, r)
-		}
-	})
+	// 	if r.Method == "PUT" {
+	// 		updateProduk(w, r)
+	// 	}
 
-	http.HandleFunc(Route.API.Category, func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "GET" {
-			listCategory(w, r)
-		}
+	// 	if r.Method == "DELETE" {
+	// 		deleteProduk(w, r)
+	// 	}
+	// })
 
-		if r.Method == "POST" {
-			addCategory(w, r)
-		}
+	// http.HandleFunc(helper.Route.API.Category, func(w http.ResponseWriter, r *http.Request) {
+	// 	if r.Method == "GET" {
+	// 		listCategory(w, r)
+	// 	}
 
-		if r.Method == "PUT" {
-			updateCategory(w, r)
-		}
+	// 	if r.Method == "POST" {
+	// 		addCategory(w, r)
+	// 	}
 
-		if r.Method == "DELETE" {
-			deleteCategory(w, r)
-		}
-	})
+	// 	if r.Method == "PUT" {
+	// 		updateCategory(w, r)
+	// 	}
 
-	http.HandleFunc(Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
-		printJSONSuccess(map[string]string{
+	// 	if r.Method == "DELETE" {
+	// 		deleteCategory(w, r)
+	// 	}
+	// })
+
+	http.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
+		helper.PrintJSONSuccess(map[string]string{
 			"status":  "ok",
 			"message": "API Running",
 		}, w)
 	})
 
-	http.HandleFunc(Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc(helper.Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "api-doc/JagoGolang/index.html")
 	})
 
-	http.HandleFunc(Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
-		printJSONSuccess(map[string]string{
+	http.HandleFunc(helper.Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
+		helper.PrintJSONSuccess(map[string]string{
 			"message": "Selamat Datang di Kasir Online - API v1.0",
+			"debug":   fmt.Sprintf("path=%s", r.URL.Path),
 		}, w)
 	})
 
