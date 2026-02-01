@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"kasir-online/models"
 )
@@ -9,10 +10,6 @@ import (
 type ProductRepository struct {
 	db *sql.DB
 }
-
-type e string
-
-func (x e) Error() string { return string(x) }
 
 func NewProductRepository(db *sql.DB) *ProductRepository {
 	return &ProductRepository{db: db}
@@ -50,7 +47,7 @@ func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
 	var p models.Product
 	err := repo.db.QueryRow(query, id).Scan(&p.ID, &p.Name, &p.Price, &p.Stock)
 	if err == sql.ErrNoRows {
-		return nil, e("Produk tidak ditemukan")
+		return nil, errors.New("Produk tidak ditemukan")
 	}
 	if err != nil { // catch other error
 		return nil, err
@@ -83,7 +80,7 @@ func (repo *ProductRepository) Delete(id int) error {
 	}
 
 	if rows == 0 {
-		return e(fmt.Sprintf("Product ID:%d not found", id))
+		return fmt.Errorf("Product ID:%d not found", id)
 	}
 
 	return nil
@@ -103,7 +100,7 @@ func (repo *ProductRepository) Update(id int, updateProduct *models.Product) err
 	}
 
 	if rows == 0 {
-		return e(fmt.Sprintf("Product ID:%d not found", id))
+		return fmt.Errorf("Product ID:%d not found", id)
 	}
 
 	return nil
@@ -120,7 +117,7 @@ func (repo *ProductRepository) GetByID_V1(id int) (*models.Product, error) {
 			return &p, nil
 		}
 	}
-	return nil, e("not found")
+	return nil, errors.New("not found")
 }
 func (repo *ProductRepository) Create_V1(newProduct *models.Product) error {
 	products = append(products, *newProduct)
@@ -133,7 +130,7 @@ func (repo *ProductRepository) Delete_V1(id int) error {
 			return nil
 		}
 	}
-	return e("not found")
+	return errors.New("not found")
 }
 
 func (repo *ProductRepository) Update_V1(id int, updateProduct *models.Product) error {
@@ -144,5 +141,5 @@ func (repo *ProductRepository) Update_V1(id int, updateProduct *models.Product) 
 			return nil
 		}
 	}
-	return e("not found")
+	return errors.New("not found")
 }

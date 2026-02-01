@@ -46,43 +46,14 @@ func main() {
 	productService := services.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
+	categoryRepo := repositories.NewCategoryRepository(db)
+	categoryService := services.NewCategoryService(categoryRepo)
+	categoryHandler := handlers.NewCategoryHandler(categoryService)
+
 	http.HandleFunc(helper.Route.API.ProductByID, productHandler.HandleByID)
 	http.HandleFunc(helper.Route.API.Product, productHandler.HandleProducts)
-	// http.HandleFunc(helper.Route.API.Product, func(w http.ResponseWriter, r *http.Request) {
-	// 	if r.Method == "GET" {
-	// 		models.listProduk(w, r)
-	// 	}
-
-	// 	if r.Method == "POST" {
-	// 		addProduk(w, r)
-	// 	}
-
-	// 	if r.Method == "PUT" {
-	// 		updateProduk(w, r)
-	// 	}
-
-	// 	if r.Method == "DELETE" {
-	// 		deleteProduk(w, r)
-	// 	}
-	// })
-
-	// http.HandleFunc(helper.Route.API.Category, func(w http.ResponseWriter, r *http.Request) {
-	// 	if r.Method == "GET" {
-	// 		listCategory(w, r)
-	// 	}
-
-	// 	if r.Method == "POST" {
-	// 		addCategory(w, r)
-	// 	}
-
-	// 	if r.Method == "PUT" {
-	// 		updateCategory(w, r)
-	// 	}
-
-	// 	if r.Method == "DELETE" {
-	// 		deleteCategory(w, r)
-	// 	}
-	// })
+	http.HandleFunc(helper.Route.API.CategoryByID, categoryHandler.HandleByID)
+	http.HandleFunc(helper.Route.API.Category, categoryHandler.HandleCategories)
 
 	http.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
 		helper.PrintJSONSuccess(map[string]string{
@@ -98,7 +69,7 @@ func main() {
 	http.HandleFunc(helper.Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
 		helper.PrintJSONSuccess(map[string]string{
 			"message": "Selamat Datang di Kasir Online - API v1.0",
-			"debug":   fmt.Sprintf("path=%s", r.URL.Path),
+			"path":    fmt.Sprintf("%s", r.URL.Path),
 		}, w)
 	})
 

@@ -91,16 +91,16 @@ func (h *ProductHandler) Update(w http.ResponseWriter, r *http.Request) {
 
 		// validasi data
 		var updateProduct models.Product
-		parseErr := json.NewDecoder(r.Body).Decode(&updateProduct)
+		err = json.NewDecoder(r.Body).Decode(&updateProduct)
 
-		if parseErr != nil {
+		if err != nil {
 			helper.SetJSONError("Product tidak valid", w)
 			return
 		}
 
 		err = h.service.Update(id, &updateProduct)
 		if err != nil {
-			helper.SetJSONError(err, w)
+			helper.SetJSONError(err.Error(), w)
 			return
 		}
 		updateProduct.ID = id
@@ -155,7 +155,7 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	// tambahkan ke slice
 	newID, err := h.service.Create(&newProduct)
 	if err != nil {
-		helper.SetJSONError(err, w)
+		helper.SetJSONError(err.Error(), w)
 		return
 	}
 
@@ -225,9 +225,9 @@ func (h *ProductHandler) Update_V1(w http.ResponseWriter, r *http.Request) {
 
 		// validasi data
 		var updateProduct models.Product
-		parseErr := json.NewDecoder(r.Body).Decode(&updateProduct)
+		err = json.NewDecoder(r.Body).Decode(&updateProduct)
 
-		if parseErr != nil {
+		if err != nil {
 			helper.SetJSONError("Product tidak valid", w)
 			return
 		}

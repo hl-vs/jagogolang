@@ -5,7 +5,7 @@ info:
 
 http:
   method: PUT
-  url: "{{baseURL}}/api/product/1"
+  url: "{{baseURL}}/api/product/62"
   headers:
     - name: Content-Type
       value: application/json
@@ -13,9 +13,9 @@ http:
     type: json
     data: |-
       {
-        "name": "Indomie Rebus",
-        "price": 2500,
-        "stock": 20
+        "name": "Samyang Cheese",
+        "price": 11500,
+        "stock": 15
       }
   auth: inherit
 

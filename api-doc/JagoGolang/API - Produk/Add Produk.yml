@@ -14,9 +14,9 @@ http:
     data: |-
       {
         "id": 1,
-        "name": "Indomie Goreng",
-        "price": 3500,
-        "stock": 14
+        "name": "asasasa",
+        "price": 10,
+        "stock": 0
       }
   auth: inherit
 

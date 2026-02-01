@@ -1,17 +1,21 @@
 info:
-  name: Delete Categories
+  name: Add Category
   type: http
   seq: 2
 
 http:
-  method: DELETE
-  url: "{{baseURL}}/api/categories/0"
+  method: POST
+  url: "{{baseURL}}/api/category"
   headers:
     - name: Content-Type
       value: application/json
   body:
     type: json
-    data: ""
+    data: |-
+      {
+        "name": "Makanan",
+        "description": "Bisa dimakan"
+      },
   auth: inherit
 
 settings:

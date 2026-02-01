@@ -21,8 +21,8 @@ var Route = struct {
 	}{
 		Product:      "/api/product",
 		ProductByID:  "/api/product/",
-		Category:     "/api/categories",
-		CategoryByID: "/api/categories",
+		Category:     "/api/category",
+		CategoryByID: "/api/category/",
 		Health:       "/health",
 		APIDOC:       "/api-doc",
 	},
