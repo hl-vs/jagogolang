@@ -13,10 +13,10 @@ http:
     type: json
     data: |-
       {
-        "id": 1,
-        "name": "asasasa",
-        "price": 10,
-        "stock": 0
+        "name": "Bakso Urat",
+        "price": 6000,
+        "stock": 10,
+        "category_id": "3"
       }
   auth: inherit
 

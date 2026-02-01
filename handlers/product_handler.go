@@ -142,7 +142,10 @@ func (h *ProductHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var newProduct models.Product
 	err := json.NewDecoder(r.Body).Decode(&newProduct)
 	if err != nil {
-		helper.SetJSONError("Product tidak valid.", w)
+		helper.SetJSONError(map[string]string{
+			"message": "Product tidak valid.",
+			"err":     err.Error(),
+		}, w)
 		return
 	}
 

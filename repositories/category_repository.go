@@ -51,7 +51,7 @@ func (repo *CategoryRepository) GetByID(id int) (*models.Category, error) {
 }
 
 func (repo *CategoryRepository) Create(newCategory *models.Category) (*int, error) {
-	query := "INSERT INTO categories (name, description) VALUES ($1, $2) RETURNING id"
+	query := "INSERT INTO categories (updated_at, name, description) VALUES (NOW(), $1, $2) RETURNING id"
 
 	err := repo.db.QueryRow(query, newCategory.Name, newCategory.Description).Scan(&newCategory.ID)
 	if err != nil {
@@ -82,7 +82,7 @@ func (repo *CategoryRepository) Delete(id int) error {
 }
 
 func (repo *CategoryRepository) Update(id int, updateCategory *models.Category) error {
-	query := "UPDATE categories SET name = $1, description = $2 WHERE id = $3"
+	query := "UPDATE categories SET name = $1, description = $2, updated_at = NOW() WHERE id = $3"
 
 	result, err := repo.db.Exec(query, updateCategory.Name, updateCategory.Description, id)
 	if err != nil {

@@ -1,10 +1,13 @@
 package models
 
+import "gopkg.in/guregu/null.v4"
+
 type Product struct {
-	ID    int    `json:"id"`
-	Name  string `json:"name"`
-	Price int    `json:"price"`
-	Stock int    `json:"stock"`
+	ID         int      `json:"id"`
+	Name       string   `json:"name"`
+	Price      int      `json:"price"`
+	Stock      int      `json:"stock"`
+	CategoryID null.Int `json:"category_id" gorm:"column:category_id"`
 }
 
 // // GET localhost:8080/api/produk/

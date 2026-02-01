@@ -21,7 +21,7 @@ var products = []models.Product{
 }
 
 func (repo *ProductRepository) GetAll() ([]models.Product, error) {
-	query := "SELECT id, name, price, stock FROM products"
+	query := "SELECT id, name, price, stock, category_id FROM products"
 	rows, err := repo.db.Query(query)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func (repo *ProductRepository) GetAll() ([]models.Product, error) {
 	// isi array
 	for rows.Next() {
 		var p models.Product
-		err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Stock)
+		err := rows.Scan(&p.ID, &p.Name, &p.Price, &p.Stock, &p.CategoryID)
 		if err != nil {
 			return nil, err
 		}
@@ -56,9 +56,9 @@ func (repo *ProductRepository) GetByID(id int) (*models.Product, error) {
 }
 
 func (repo *ProductRepository) Create(newProduct *models.Product) (*int, error) {
-	query := "INSERT INTO products (name, price, stock) VALUES ($1, $2, $3) RETURNING id"
+	query := "INSERT INTO products ( updated_at, name, price, stock, category_id) VALUES (NOW(), $1, $2, $3, $4) RETURNING id"
 
-	err := repo.db.QueryRow(query, newProduct.Name, newProduct.Price, newProduct.Stock).Scan(&newProduct.ID)
+	err := repo.db.QueryRow(query, newProduct.Name, newProduct.Price, newProduct.Stock, newProduct.CategoryID).Scan(&newProduct.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,9 +87,9 @@ func (repo *ProductRepository) Delete(id int) error {
 }
 
 func (repo *ProductRepository) Update(id int, updateProduct *models.Product) error {
-	query := "UPDATE products SET name = $1, price = $2, stock = $3 WHERE id = $4"
+	query := "UPDATE products SET name = $1, price = $2, stock = $3, category_id = $4, updated_at = NOW() WHERE id = $5"
 
-	result, err := repo.db.Exec(query, updateProduct.Name, updateProduct.Price, updateProduct.Stock, id)
+	result, err := repo.db.Exec(query, updateProduct.Name, updateProduct.Price, updateProduct.Stock, updateProduct.CategoryID, id)
 	if err != nil {
 		return err
 	}
