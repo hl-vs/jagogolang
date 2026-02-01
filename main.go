@@ -2,16 +2,47 @@ package main
 
 import (
 	"fmt"
+	"kasir-online/database"
 	"kasir-online/handlers"
 	"kasir-online/helper"
 	"kasir-online/repositories"
 	"kasir-online/services"
 	"log"
 	"net/http"
+	"os"
+	"strings"
+
+	"github.com/spf13/viper"
 )
 
+type Config struct {
+	Port   string `mapstructure:"APP_PORT"`
+	DBConn string `mapstructure:"DATABASE_URL"`
+}
+
 func main() {
-	productRepo := repositories.NewProductRepository(nil)
+	// setup viper config
+	viper.AutomaticEnv()
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+
+	if _, err := os.Stat(".env"); err == nil {
+		viper.SetConfigFile(".env")
+		_ = viper.ReadInConfig()
+	}
+
+	config := Config{
+		Port:   viper.GetString("APP_PORT"),
+		DBConn: viper.GetString("DATABASE_URL"),
+	}
+
+	// Setup database
+	db, err := database.InitDB(config.DBConn)
+	if err != nil {
+		log.Fatal("Failed to initialize database:", err)
+	}
+	defer db.Close()
+
+	productRepo := repositories.NewProductRepository(db)
 	productService := services.NewProductService(productRepo)
 	productHandler := handlers.NewProductHandler(productService)
 
@@ -71,12 +102,15 @@ func main() {
 		}, w)
 	})
 
+	addr := "0.0.0.0:" + config.Port
+
 	fmt.Println("=======================")
 	fmt.Println("Kasir Online - API v1.0")
 	fmt.Println("=======================")
-	fmt.Println("API url: http://localhost:8080")
+	fmt.Print("API url: http://localhost:", config.Port)
+	fmt.Println("\n---")
 
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
 }
