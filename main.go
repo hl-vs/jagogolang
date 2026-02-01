@@ -73,7 +73,7 @@ func main() {
 		}, w)
 	})
 
-	addr := "0.0.0.0:" + config.Port
+	addr := ":" + config.Port
 
 	fmt.Println("=======================")
 	fmt.Println("Kasir Online - API v1.0")
