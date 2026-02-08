@@ -20,9 +20,15 @@ var products = []models.Product{
 	{ID: 2, Name: "Vit 1000ml", Price: 3000, Stock: 40},
 }
 
-func (repo *ProductRepository) GetAll() ([]models.Product, error) {
+func (repo *ProductRepository) GetAll(nameFilter string) ([]models.Product, error) {
 	query := "SELECT id, name, price, stock, category_id FROM products"
-	rows, err := repo.db.Query(query)
+	args := []any{}
+	if nameFilter != "" {
+		query += " WHERE name ILIKE $1"
+		args = append(args, "%"+nameFilter+"%")
+	}
+
+	rows, err := repo.db.Query(query, args...)
 	if err != nil {
 		return nil, err
 	}
