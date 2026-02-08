@@ -26,6 +26,30 @@ func (h *TransactionHandler) HandleCheckout(w http.ResponseWriter, r *http.Reque
 	}
 }
 
+func (h *TransactionHandler) HandleReport(w http.ResponseWriter, r *http.Request) {
+	startDate := r.URL.Query().Get("start_date")
+	endDate := r.URL.Query().Get("end_date")
+
+	if (startDate != "" && endDate == "") || (startDate == "" && endDate != "") {
+		helper.SetJSONError(map[string]string{
+			"status": "error",
+			"error":  "start_date and end_date must be specified",
+		}, w)
+		return
+	}
+
+	report, err := h.service.Report(startDate, endDate)
+	if err != nil {
+		helper.SetJSONError(map[string]string{
+			"status": "error",
+			"error":  err.Error(),
+		}, w)
+		return
+	}
+
+	helper.PrintJSONSuccess(report, w)
+}
+
 func (h *TransactionHandler) Checkout(w http.ResponseWriter, r *http.Request) {
 	var req models.CheckoutRequest
 	err := json.NewDecoder(r.Body).Decode(&req)

@@ -17,6 +17,14 @@ http:
           {
             "product_id": 19,
             "quantity": 1
+          },
+          {
+            "product_id": 13,
+            "quantity": 1
+          },
+          {
+            "product_id": 15,
+            "quantity": 1
           }
         ]
       }

@@ -1,15 +1,11 @@
 info:
-  name: Get Produk by Name
+  name: Today
   type: http
   seq: 6
 
 http:
   method: GET
-  url: "{{baseURL}}/api/product?name=bakso"
-  params:
-    - name: name
-      value: bakso
-      type: query
+  url: "{{baseURL}}/api/report/hari-ini"
   auth: inherit
 
 settings:

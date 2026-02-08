@@ -63,6 +63,8 @@ func main() {
 	mux.HandleFunc(helper.Route.API.CategoryByID, categoryHandler.HandleByID)
 	mux.HandleFunc(helper.Route.API.Category, categoryHandler.HandleCategories)
 	mux.HandleFunc(helper.Route.API.Checkout, transactionHandler.HandleCheckout)
+	mux.HandleFunc(helper.Route.API.ReportRange, transactionHandler.HandleReport)
+	mux.HandleFunc(helper.Route.API.ReportToday, transactionHandler.HandleReport)
 
 	mux.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
 		helper.PrintJSONSuccess(map[string]string{

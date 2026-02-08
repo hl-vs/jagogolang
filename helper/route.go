@@ -7,6 +7,8 @@ var Route = struct {
 		Category     string
 		CategoryByID string
 		Checkout     string
+		ReportToday  string
+		ReportRange  string
 		Health       string
 		APIDOC       string
 	}
@@ -18,6 +20,8 @@ var Route = struct {
 		Category     string
 		CategoryByID string
 		Checkout     string
+		ReportToday  string
+		ReportRange  string
 		Health       string
 		APIDOC       string
 	}{
@@ -26,6 +30,8 @@ var Route = struct {
 		Category:     "/api/category",
 		CategoryByID: "/api/category/",
 		Checkout:     "/api/checkout",
+		ReportToday:  "/api/report/hari-ini",
+		ReportRange:  "/api/report",
 		Health:       "/health",
 		APIDOC:       "/api-doc",
 	},
