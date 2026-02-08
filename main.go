@@ -50,27 +50,33 @@ func main() {
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
-	http.HandleFunc(helper.Route.API.ProductByID, productHandler.HandleByID)
-	http.HandleFunc(helper.Route.API.Product, productHandler.HandleProducts)
-	http.HandleFunc(helper.Route.API.CategoryByID, categoryHandler.HandleByID)
-	http.HandleFunc(helper.Route.API.Category, categoryHandler.HandleCategories)
+	// custom muxing for log
+	mux := http.NewServeMux()
 
-	http.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
+	// handler
+	mux.HandleFunc(helper.Route.API.ProductByID, productHandler.HandleByID)
+	mux.HandleFunc(helper.Route.API.Product, productHandler.HandleProducts)
+	mux.HandleFunc(helper.Route.API.CategoryByID, categoryHandler.HandleByID)
+	mux.HandleFunc(helper.Route.API.Category, categoryHandler.HandleCategories)
+
+	mux.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
 		helper.PrintJSONSuccess(map[string]string{
 			"status":  "ok",
 			"message": "API Running",
 		}, w)
 	})
 
-	http.HandleFunc(helper.Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc(helper.Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, "api-doc/JagoGolang/index.html")
 	})
 
-	http.HandleFunc(helper.Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
-		helper.PrintJSONSuccess(map[string]string{
-			"message": "Selamat Datang di Kasir Online - API v1.0",
-			"path":    fmt.Sprintf("%s", r.URL.Path),
-		}, w)
+	mux.HandleFunc(helper.Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
+		res := helper.WelcomeResponse{
+			Message: "Selamat Datang di Kasir Online - API v1.0",
+			APIDoc:  "/api-doc",
+			Request: r.URL.Path,
+		}
+		helper.PrintJSONSuccess(res, w)
 	})
 
 	addr := ":" + config.Port
@@ -78,10 +84,18 @@ func main() {
 	fmt.Println("=======================")
 	fmt.Println("Kasir Online - API v1.0")
 	fmt.Println("=======================")
-	fmt.Print("API url: http://localhost:", config.Port)
-	fmt.Println("\n---")
+	fmt.Printf("API url: http://localhost:%s\n\n", config.Port)
 
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	wrappedMux := loggingMiddleware(mux)
+
+	if err := http.ListenAndServe(addr, wrappedMux); err != nil {
 		log.Fatalf("Server error: %v", err)
 	}
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Printf("%s %s from %s", r.Method, r.URL.Path, r.RemoteAddr)
+		next.ServeHTTP(w, r)
+	})
 }
