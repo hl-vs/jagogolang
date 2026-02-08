@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"kasir-online/database"
 	"kasir-online/handlers"
@@ -19,6 +20,9 @@ type Config struct {
 	Port   string `mapstructure:"APP_PORT"`
 	DBConn string `mapstructure:"DATABASE_URL"`
 }
+
+//go:embed api-doc/JagoGolang/index.html
+var apiDocFS embed.FS
 
 func main() {
 	// setup viper config
@@ -74,7 +78,13 @@ func main() {
 	})
 
 	mux.HandleFunc(helper.Route.API.APIDOC, func(w http.ResponseWriter, r *http.Request) {
-		http.ServeFile(w, r, "api-doc/JagoGolang/index.html")
+		data, err := apiDocFS.ReadFile("api-doc/JagoGolang/index.html")
+		if err != nil {
+			log.Println(err.Error())
+		}
+		w.Header().Set("Content-Type", "text/html")
+		w.Write(data)
+		//http.ServeFile(w, r, "api-doc/JagoGolang/index.html")
 	})
 
 	mux.HandleFunc(helper.Route.ROOT, func(w http.ResponseWriter, r *http.Request) {
