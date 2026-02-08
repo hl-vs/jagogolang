@@ -1,0 +1,29 @@
+info:
+  name: Checkout
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseURL}}/api/checkout"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "items": [
+          {
+            "product_id": 19,
+            "quantity": 1
+          }
+        ]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

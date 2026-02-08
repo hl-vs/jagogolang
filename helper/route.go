@@ -6,6 +6,7 @@ var Route = struct {
 		ProductByID  string
 		Category     string
 		CategoryByID string
+		Checkout     string
 		Health       string
 		APIDOC       string
 	}
@@ -16,6 +17,7 @@ var Route = struct {
 		ProductByID  string
 		Category     string
 		CategoryByID string
+		Checkout     string
 		Health       string
 		APIDOC       string
 	}{
@@ -23,6 +25,7 @@ var Route = struct {
 		ProductByID:  "/api/product/",
 		Category:     "/api/category",
 		CategoryByID: "/api/category/",
+		Checkout:     "/api/checkout",
 		Health:       "/health",
 		APIDOC:       "/api-doc",
 	},

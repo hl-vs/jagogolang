@@ -50,6 +50,10 @@ func main() {
 	categoryService := services.NewCategoryService(categoryRepo)
 	categoryHandler := handlers.NewCategoryHandler(categoryService)
 
+	transactionRepo := repositories.NewTransactionRepository(db)
+	transactionService := services.NewTransactionService(transactionRepo)
+	transactionHandler := handlers.NewTransactionHandler(transactionService)
+
 	// custom muxing for log
 	mux := http.NewServeMux()
 
@@ -58,6 +62,7 @@ func main() {
 	mux.HandleFunc(helper.Route.API.Product, productHandler.HandleProducts)
 	mux.HandleFunc(helper.Route.API.CategoryByID, categoryHandler.HandleByID)
 	mux.HandleFunc(helper.Route.API.Category, categoryHandler.HandleCategories)
+	mux.HandleFunc(helper.Route.API.Checkout, transactionHandler.HandleCheckout)
 
 	mux.HandleFunc(helper.Route.API.Health, func(w http.ResponseWriter, r *http.Request) {
 		helper.PrintJSONSuccess(map[string]string{
